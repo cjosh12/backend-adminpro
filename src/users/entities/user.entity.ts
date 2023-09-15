@@ -32,6 +32,12 @@ export class User {
   })
   is_active: boolean;
 
+  @Column('text', {
+    array: true,
+    default: ['user'],
+  })
+  roles: string[];
+
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
