@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { InjectRepository } from "@nestjs/typeorm";
 
-import { Strategy, Extractjwt } from 'passport-jwt';
+import { Strategy, ExtractJwt } from 'passport-jwt';
 import { JwtPayload } from "../interfaces";
 
 import { User } from "src/users";
@@ -16,11 +16,11 @@ export class JwtStrategy extends PassportStrategy(Strategy){
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
 
-        private configSerivice: ConfigService,
+        configSerivice: ConfigService,
     ){
         super({
             secretOrKey: configSerivice.get('JWT_SECRET'),
-            jwtFromRequest: Extractjwt.fromAuthHeatherAsBearerToken(),
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         });
     }
     async validate(payload: JwtPayload): Promise<User>{
@@ -29,7 +29,8 @@ export class JwtStrategy extends PassportStrategy(Strategy){
         const DBuser = await this.userRepository.findOneBy({email: user});
         if(!DBuser) throw new UnauthorizedException('El token no es valido');
 
-        if(!DBuser.is_active) throw new UnauthorizedException('El usuario no está activo, comunicarse con un administrador');
+        if(!DBuser.is_active) throw new UnauthorizedException(
+            'El usuario no está activo, comunicarse con un administrador');
 
         return DBuser;
     }

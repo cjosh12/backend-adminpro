@@ -2,11 +2,11 @@ import { Controller, Post, Body, Patch } from '@nestjs/common';
 
 import { AuthService } from '../services';
 import { ChangePasswordDto, LoginDto, RegisterDto } from '../dto';
-import { User } from 'src/users';
+import { User, GetUser } from 'src/users';
 import { MyResponse } from 'src/core';
 import { LoginResponse } from '../interfaces';
 import { Auth } from '../decorators';
-import { GetUser } from 'src/users/decorators/get-user.decorator';
+
 
 @Controller('auth')
 export class AuthController {
