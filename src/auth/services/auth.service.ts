@@ -89,10 +89,7 @@ export class AuthService {
       status: 'Created',
       message: 'Usuario encontrado con éxito',
       reply: {
-        user_id: user.user_id,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
+        user,
         token,
       },
     };
@@ -128,7 +125,7 @@ export class AuthService {
   
         const response: MyResponse<Record<string, never>> = {
           statusCode: 200,
-          status: 'Ok',
+          status: 'OK',
           message: 'La Contraseña se cambio con éxito',
           reply: {},
         };
