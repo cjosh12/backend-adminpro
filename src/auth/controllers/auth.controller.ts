@@ -4,7 +4,7 @@ import { AuthService } from '../services';
 import { ChangePasswordDto, LoginDto, RegisterDto } from '../dto';
 import { User, GetUser } from 'src/users';
 import { MyResponse } from 'src/core';
-import { LoginResponse } from '../interfaces';
+import { CheckTokenResponse, LoginResponse } from '../interfaces';
 import { Auth } from '../decorators';
 
 
@@ -24,7 +24,7 @@ export class AuthController {
   
   @Get('check-token')
   @Auth()
-  checkToken(@Request() req: Request) {
+  checkToken(@Request() req: Request): MyResponse<CheckTokenResponse> {
     const user = req['user'] as User;
     return this.authService.checkToken(user);
   }
