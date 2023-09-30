@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Species } from '../entities';
 import { Repository } from 'typeorm';
@@ -11,13 +11,14 @@ export class SpeciesService {
         @InjectRepository(Species)
         private readonly speciesRepository: Repository<Species>
     ){}
+
     async create(
         createSpeciesDto: CreateSpeciesDto,
       ): Promise<MyResponse<Species>> {
-        const { species_id, ...allData } = createSpeciesDto;
+        const { name, ...allData } = createSpeciesDto;
     
         const species = await this.speciesRepository.findOne({
-          species_id,
+          where: {name},
         });
     
         if (species)
@@ -45,9 +46,25 @@ export class SpeciesService {
         }
       }
       
-      getSpecies(species_id: string){
-        
-      }
+      async getSpecies(species_id: string): Promise<MyResponse<Species>>{
+        const species = await this.speciesRepository.findOne({
+            where: { species_id },
+            relations: ['animals'],
+        });
+
+        if (!species)
+        throw new NotFoundException(`La especie #${species_id} no existe`);
+  
+      const response: MyResponse<Species> = {
+        statusCode: 200,
+        status: 'OK',
+        message: `La especie #${species_id} fue encontrada exitosamente`,
+        reply: species,
+      };
+  
+      return response;
+    }
+      
 
       private handleDBErrors(error: any): never {
         throw new BadRequestException(`Error: ${error.detail}`);
