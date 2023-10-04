@@ -1,29 +1,48 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Animal } from "./animal.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+import { Animal } from './animal.entity';
+import { Biome } from './biome.entity';
+
 
 @Entity('species')
 export class Species {
-    @PrimaryGeneratedColumn('uuid')
-    species_id: string;
+  @PrimaryGeneratedColumn('uuid')
+  species_id: string;
 
-    @Column('text')
-    name:string;
+  @Column('text', {
+    unique: true,
+  })
+  name: string;
 
-    @Column('text')
-    descripcion: string;
+  @Column('text')
+  description: string;
 
-    @OneToMany(() => Animal, (animal) => animal.species)
-    animals: Animal[];
+  @Column('text')
+  scientific_name: string;
 
-    @CreateDateColumn({
-        type: 'timestamptz',
-        default: () => 'CURRENT_TIMESTAMP',
-      })
-      created_at: Date;
+  @OneToMany(() => Animal, (animal) => animal.species)
+  animals: Animal[];
 
-    @UpdateDateColumn({
-        type: 'timestamptz',
-        default: () => 'CURRENT_TIMESTAMP',
-      })
-      updated_at: Date;
+  @ManyToOne(() => Biome, (biome) => biome.species)
+  biome: Biome;
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  created_at: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  updated_at: Date;
 }
