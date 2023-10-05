@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Biome } from '../entities';
 import { Repository } from 'typeorm';
 import { CreateBiomeDto } from '../dto';
-import { MyResponse } from 'src/core';
+import { MyResponse, handleDBErrors } from 'src/core';
 
 @Injectable()
 export class BiomeService {
@@ -21,7 +21,7 @@ export class BiomeService {
     });
 
     if (biomeVerification)
-      throw new BadRequestException(`El Bioma ${name} ya existe`);
+      handleDBErrors(biomeVerification);
 
     try {
       const biome = this.biomeRepository.create({
@@ -41,11 +41,9 @@ export class BiomeService {
       return response;
     } catch (error) {
       console.log(error);
-      this.handleDBErrors(error);
+      handleDBErrors(error);
     }
   }
 
-  private handleDBErrors(error: any): never {
-    throw new BadRequestException(`Error: ${error.detail}`);
-  }
+
 }

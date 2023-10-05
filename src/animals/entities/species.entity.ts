@@ -2,6 +2,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -10,6 +12,7 @@ import {
 
 import { Animal } from './animal.entity';
 import { Biome } from './biome.entity';
+import { Diet } from './diet.entity';
 
 
 @Entity('species')
@@ -33,6 +36,10 @@ export class Species {
 
   @ManyToOne(() => Biome, (biome) => biome.species)
   biome: Biome;
+
+  @ManyToMany(() => Diet, (diet) => diet.species)
+  @JoinTable()
+  diets: Diet[];
 
   @CreateDateColumn({
     type: 'timestamptz',
